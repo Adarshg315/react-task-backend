@@ -1,19 +1,22 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 const cors = require("cors");
 
 const app = express();
 const db = require("./models");
 const Role = db.role;
+const User = db.user;
 
 db.mongoose
-	.connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-	})
+	.connect(
+		`mongodb+srv://mongoadarsh:cqWWi48T63c5Wii6@cluster0.y2v1i.mongodb.net/task-db?retryWrites=true&w=majority`,
+		{
+			useNewUrlParser: true,
+			useUnifiedTopology: true,
+		}
+	)
 	.then(() => {
 		console.log("Successfully connect to MongoDB.");
-		initial();
+		// initial();
 	})
 	.catch((err) => {
 		console.error("Connection error", err);
@@ -30,7 +33,10 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
-// app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
+
+require("./routes/auth.routes")(app);
+require("./routes/user.routes")(app);
 
 // simple route
 app.get("/", (req, res) => {
@@ -43,38 +49,53 @@ app.listen(PORT, () => {
 	console.log(`Server is running on port ${PORT}.`);
 });
 
-function initial() {
-	Role.estimatedDocumentCount((err, count) => {
-		if (!err && count === 0) {
-			new Role({
-				name: "user",
-			}).save((err) => {
-				if (err) {
-					console.log("error", err);
-				}
+// function initial() {
+// 	Role.estimatedDocumentCount((err, count) => {
+// 		if (!err && count === 0) {
+// 			new Role({
+// 				name: "user",
+// 			}).save((err) => {
+// 				if (err) {
+// 					console.log("error", err);
+// 				}
 
-				console.log("added 'user' to roles collection");
-			});
+// 				console.log("added 'user' to roles collection");
+// 			});
 
-			new Role({
-				name: "moderator",
-			}).save((err) => {
-				if (err) {
-					console.log("error", err);
-				}
+// 			new Role({
+// 				name: "moderator",
+// 			}).save((err) => {
+// 				if (err) {
+// 					console.log("error", err);
+// 				}
 
-				console.log("added 'moderator' to roles collection");
-			});
+// 				console.log("added 'moderator' to roles collection");
+// 			});
 
-			new Role({
-				name: "admin",
-			}).save((err) => {
-				if (err) {
-					console.log("error", err);
-				}
+// 			new Role({
+// 				name: "admin",
+// 			}).save((err) => {
+// 				if (err) {
+// 					console.log("error", err);
+// 				}
 
-				console.log("added 'admin' to roles collection");
-			});
-		}
-	});
-}
+// 				console.log("added 'admin' to roles collection");
+// 			});
+// 		}
+// 	});
+// 	User.estimatedDocumentCount((err, count) => {
+// 		if (!err && count === 0) {
+// 			new User({
+// 				username: "moderator",
+// 				password: "12345678",
+// 				email: "mod@gmail.com",
+// 				roles: ["user", "moderator"],
+// 			}).save((err) => {
+// 				if (err) {
+// 					console.log("error", err);
+// 				}
+// 				console.log("added 'user' to Users collection");
+// 			});
+// 		}
+// 	});
+// }
