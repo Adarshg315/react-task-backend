@@ -37,6 +37,7 @@ app.use(express.urlencoded({ extended: true }));
 
 require("./routes/auth.routes")(app);
 require("./routes/user.routes")(app);
+require("./routes/employee.routes")(app);
 
 // simple route
 app.get("/", (req, res) => {
