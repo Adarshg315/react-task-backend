@@ -3,16 +3,16 @@ const Employee = db.employees;
 
 exports.create = (req, res) => {
 	// Validate request
-	if (!req.body.title) {
+	if (!req.body.name) {
 		res.status(400).send({ message: "Content can not be empty!" });
 		return;
 	}
 
 	// Create a Employee
 	const employee = new Employee({
-		title: req.body.title,
-		description: req.body.description,
-		published: req.body.published ? req.body.published : false,
+		name: req.body.name,
+		empEmail: req.body.empEmail,
+		isActive: req.body.isActive ? req.body.isActive : true,
 	});
 
 	// Save Employee in the database
@@ -30,9 +30,9 @@ exports.create = (req, res) => {
 };
 
 exports.findAll = (req, res) => {
-	const title = req.query.title;
-	var condition = title
-		? { title: { $regex: new RegExp(title), $options: "i" } }
+	const name = req.query.name;
+	var condition = name
+		? { name: { $regex: new RegExp(name), $options: "i" } }
 		: {};
 
 	Employee.find(condition)
@@ -124,8 +124,8 @@ exports.deleteAll = (req, res) => {
 		});
 };
 
-exports.findAllPublished = (req, res) => {
-	Employee.find({ published: true })
+exports.findAllIsActive = (req, res) => {
+	Employee.find({ isActive: true })
 		.then((data) => {
 			res.send(data);
 		})
