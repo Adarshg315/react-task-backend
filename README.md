@@ -4,7 +4,7 @@
 $ npm i or yarn
 ```
 
-## Running the app
+## Running the server
 
 ```bash
 # development
